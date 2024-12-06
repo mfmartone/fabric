@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Example</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<div class="container">
+  <div class="input-group">
+    <label class="input-group__label" for="fabricInput">Fabric</label>
+    <input type="text" id="fabricInput" class="input-group__input" placeholder="Enter fabric" />
+  </div>
+  <div class="input-group">
+    <label class="input-group__label" for="colorInput">Color</label>
+    <input type="text" id="colorInput" class="input-group__input" placeholder="Enter color" />
+  </div>
+  <button id="searchButton" class="search-button">Search</button>
+  
+  <!-- Result container -->
+  <div id="resultContainer" class="result-container"></div>
+</div>
+
+<script>
+  // Gestione della ricerca e visualizzazione dinamica
+  document.getElementById('searchButton').addEventListener('click', async function () {
+    const fabric = document.getElementById('fabricInput').value.trim();
+    const color = document.getElementById('colorInput').value.trim();
+
+    if (!fabric || !color) {
+      alert('Please fill out both fields!');
+      return;
+    }
+
+    const url = `https://dev-mtm.isaiastore.com/fabric/${fabric}/${color}`;
+    const resultContainer = document.getElementById('resultContainer');
+
+    try {
+      // Recupera il contenuto HTML della pagina
+      const response = await fetch(url, {
+        headers: {
+          'Content-Type': 'text/html',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP Error: ${response.status}`);
+      }
+
+      const html = await response.text();
+
+      // Mostra il contenuto all'interno della tua pagina
+      resultContainer.innerHTML = html;
+    } catch (error) {
+      console.error(error);
+      resultContainer.innerHTML = `<p style="color: red;">Error: Unable to load content.</p>`;
+    }
+  });
+</script>
+</body>
+</html>
